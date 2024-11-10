@@ -1,12 +1,12 @@
 body{
     font-size: large;
-    background-color: rgb(65, 65, 65);
+    background-color: rgb(0, 0, 0);
 }
 
 .main{
     display: flex;
     flex-direction: column;
-    background-color: dimgray;
+    background-color: rgb(27, 26, 26);
     border-radius: 14px;
     color: chartreuse;
     padding: 15px;
@@ -18,11 +18,25 @@ body{
     display: flex;
     flex-direction: column;
     color: chartreuse;
-    background-color: dimgray;
+    background-color: rgb(27, 26, 26);
     border-radius: 14px;
     padding: 15px;
     max-width: 400px;
     margin: 10px auto;
+}
+.summary-card {
+    
+    display: flex;
+    color: chartreuse;
+    flex-direction: column;
+    margin-top: 20px;
+    padding: 10px;
+    background-color: rgb(27, 26, 26);
+    border: none;
+    width: 400px;
+    margin: 10px auto;
+    border-radius: 14px;
+    padding: 15px;
 }
 
 .weekCard{
@@ -40,11 +54,24 @@ body{
     height: 40px;
     margin-top: 10px;
     font-size: x-large;
-    border-radius: 14px;
+    border-radius: 7px;
     border: none;
 }
+.entries{
+    display: flex;
+    justify-content: space-between;
+    font-size: medium;
+}
 
+.tT{
+    font-size: x-large;
+    color: rgb(251, 111, 4);
+}
 input{
+    
     line-height: 40px;
     font-size: larger;
+    border-radius: 7px;
+    border: none;
+  
 }

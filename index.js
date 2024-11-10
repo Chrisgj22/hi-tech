@@ -12,9 +12,12 @@ const database = getDatabase(app);
 const reference = ref(database, "jobs");
 
 const saveBtn = document.getElementById("saveBtn");
-const weekDoc = document.getElementById("week");
 const job = document.getElementById("job");
 const time = document.getElementById("time");
+
+// Track jobs already rendered and the total summary
+const renderedJobs = new Map(); // Map to track job nodes
+let totalHours = 0; // Track total hours across all jobs
 
 // Save a job entry to Firebase with a timestamp
 saveBtn.addEventListener("click", () => {
@@ -30,14 +33,9 @@ saveBtn.addEventListener("click", () => {
     set(ref(database, `jobs/${jobNumber}/jobNumber`), jobNumber);
 });
 
-// Track jobs already rendered
-const renderedJobs = new Map(); // Map to track job nodes
-
-// Listen for new or updated job entries
+// Listen for new, changed, or removed job entries
 onChildAdded(reference, (snapshot) => renderJob(snapshot));
 onChildChanged(reference, (snapshot) => renderJob(snapshot));
-
-// Listen for job removal
 onChildRemoved(reference, (snapshot) => {
     const container = document.querySelector(".card-container");
     const card = renderedJobs.get(snapshot.key);
@@ -45,6 +43,7 @@ onChildRemoved(reference, (snapshot) => {
         container.removeChild(card);
         renderedJobs.delete(snapshot.key);
     }
+    updateTotalHours(); // Recalculate totals after removal
 });
 
 // Render or update a job entry
@@ -53,7 +52,7 @@ function renderJob(snapshot) {
     const jobId = snapshot.key;
     const container = document.querySelector(".card-container");
 
-    // Calculate total time
+    // Calculate total time for this job
     let totalTime = 0;
     let entriesHTML = "";
     if (data.entries) {
@@ -88,8 +87,47 @@ function renderJob(snapshot) {
     // Update the card's inner HTML
     card.innerHTML = `
         <p>Job Number: ${data.jobNumber || jobId}</p>
-        <p>Total Time: ${totalTime} hours</p>
         ${entriesHTML}
-        
+        <p>Total Time: ${totalTime} hours</p>
+    `;
+
+    // Update total hours and earnings after rendering
+    updateTotalHours();
+}
+
+// Update total hours and display in a summary card
+function updateTotalHours() {
+    let cumulativeTotalHours = 0;
+
+    // Calculate cumulative total hours from all jobs
+    renderedJobs.forEach((card, jobId) => {
+        const totalTimeElement = card.querySelector('p:last-child'); // Last <p> tag is Total Time
+        const totalTimeText = totalTimeElement.textContent.match(/Total Time: (\d+(\.\d+)?) hours/);
+        const jobTotalTime = totalTimeText ? parseFloat(totalTimeText[1]) : 0;
+        cumulativeTotalHours += jobTotalTime;
+    });
+
+    // Calculate earnings based on total hours
+    const tax = cumulativeTotalHours * 55 * 0.25;
+    const gross = cumulativeTotalHours * 55
+    const gst = cumulativeTotalHours * 55 *0.10
+    const subtotal = gross + gst
+
+    // Render or update the summary card
+    let summaryCard = document.querySelector(".summary-card");
+    if (!summaryCard) {
+        summaryCard = document.createElement("div");
+        summaryCard.classList.add("summary-card");
+        document.body.appendChild(summaryCard);
+    }
+
+    // Update summary card content
+    summaryCard.innerHTML = `
+        <h3>Total Summary</h3>
+        <p>Total Hours: ${cumulativeTotalHours} hours</p>
+        <p>Subtotal: ${subtotal} $</p>
+        <p>Gross: ${gross} $</p>
+        <p>GST: ${gst} $</p>
+        <p>Tax: $${tax.toFixed(2)}</p>
     `;
 }
