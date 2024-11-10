@@ -30,7 +30,7 @@ body{
     color: chartreuse;
     flex-direction: column;
     margin-top: 20px;
-    padding: 10px;
+    padding: 15px;
     background-color: rgb(27, 26, 26);
     border: none;
     width: 400px;
@@ -56,6 +56,8 @@ body{
     font-size: x-large;
     border-radius: 7px;
     border: none;
+    background-color: black;
+    color: chartreuse;
 }
 .entries{
     display: flex;
@@ -73,5 +75,9 @@ input{
     font-size: larger;
     border-radius: 7px;
     border: none;
+    background-color: black;
   
+}
+input:focus {
+    color: chartreuse;
 }
