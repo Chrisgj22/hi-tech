@@ -88,7 +88,8 @@ function renderJob(snapshot) {
     // Update the card's inner HTML
     card.innerHTML = `
         <p>Job Number: ${data.jobNumber || jobId}</p>
-        ${entriesHTML}
         <p>Total Time: ${totalTime} hours</p>
+        ${entriesHTML}
+        
     `;
 }
