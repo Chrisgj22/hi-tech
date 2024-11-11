@@ -28,6 +28,7 @@ body{
 .summary-card {
     
     display: flex;
+    flex-direction: column;
     color: chartreuse;
     flex-direction: column;
     margin-top: 20px;
