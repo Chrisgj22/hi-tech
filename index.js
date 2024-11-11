@@ -60,8 +60,10 @@ function renderJob(snapshot) {
             .map(entry => {
                 totalTime += entry.timeSpent;
                 return `
+                    <div class="divEntry">
                     <p>Time Entry: ${entry.timeSpent} hours</p>
                     <p>Timestamp: ${new Date(entry.timestamp).toLocaleString()}</p>
+                    </div>
                 `;
             })
             .join("");
@@ -86,9 +88,9 @@ function renderJob(snapshot) {
 
     // Update the card's inner HTML
     card.innerHTML = `
-        <p>Job Number: ${data.jobNumber || jobId}</p>
+        <p class="jobNumberCard">Job#: ${data.jobNumber || jobId}</p>
         ${entriesHTML}
-        <p>Total Time: ${totalTime} hours</p>
+        <p class="totTimeP">Total Time: ${totalTime} hours</p>
     `;
 
     // Update total hours and earnings after rendering
@@ -101,7 +103,7 @@ function updateTotalHours() {
 
     // Calculate cumulative total hours from all jobs
     renderedJobs.forEach((card, jobId) => {
-        const totalTimeElement = card.querySelector('p:last-child'); // Last <p> tag is Total Time
+        const totalTimeElement = card.querySelector('.totTimeP'); // Last <p> tag is Total Time
         const totalTimeText = totalTimeElement.textContent.match(/Total Time: (\d+(\.\d+)?) hours/);
         const jobTotalTime = totalTimeText ? parseFloat(totalTimeText[1]) : 0;
         cumulativeTotalHours += jobTotalTime;
@@ -111,7 +113,9 @@ function updateTotalHours() {
     const tax = cumulativeTotalHours * 55 * 0.25;
     const gross = cumulativeTotalHours * 55
     const gst = cumulativeTotalHours * 55 *0.10
+    const net = cumulativeTotalHours * 55 - tax - gst
     const subtotal = gross + gst
+    const taxToTransfer = gst + tax
 
     // Render or update the summary card
     let summaryCard = document.querySelector(".summary-card");
@@ -127,7 +131,10 @@ function updateTotalHours() {
         <p>Total Hours: ${cumulativeTotalHours} hours</p>
         <p>Subtotal: ${subtotal} $</p>
         <p>Gross: ${gross} $</p>
-        <p>GST: ${gst} $</p>
         <p>Tax: $${tax.toFixed(2)}</p>
+        <p>GST: ${gst} $</p>
+        <p>Net: ${net} $</p>
+        <p>Tax&GST: ${taxToTransfer} $</p>
+        
     `;
 }

@@ -1,14 +1,15 @@
 body{
     font-size: large;
-    background-color: rgb(0, 0, 0);
+    background-color: white;
 }
 
 .main{
     display: flex;
     flex-direction: column;
-    background-color: rgb(27, 26, 26);
+    align-items: center;
+    background-color: rgb(241, 240, 240);
     border-radius: 14px;
-    color: chartreuse;
+    color: rgb(0, 0, 0);
     padding: 15px;
     max-width: 400px;
     margin: 0px auto;
@@ -17,8 +18,8 @@ body{
 .card{
     display: flex;
     flex-direction: column;
-    color: chartreuse;
-    background-color: rgb(27, 26, 26);
+    color: rgb(1, 1, 1);
+    background-color: rgb(241, 241, 241);
     border-radius: 14px;
     padding: 15px;
     max-width: 400px;
@@ -48,6 +49,16 @@ body{
     display: flex;
     justify-content: space-between;
 }
+.jobNumberCard{
+    font-size: x-large;
+    color: crimson;
+}
+
+.divEntry{
+    display: flex;
+    font-size: small;
+    justify-content: space-between;
+}
 
 #saveBtn{
     width: 100%;
@@ -56,9 +67,13 @@ body{
     font-size: x-large;
     border-radius: 7px;
     border: none;
-    background-color: black;
-    color: chartreuse;
+    background-color: rgb(178, 247, 146);
+    color: black;
 }
+.inputFields{
+    width: 150px;
+}
+
 .entries{
     display: flex;
     justify-content: space-between;
@@ -70,14 +85,12 @@ body{
     color: rgb(251, 111, 4);
 }
 input{
-    
+    width: 80px;
     line-height: 40px;
     font-size: larger;
     border-radius: 7px;
     border: none;
-    background-color: black;
+    margin-bottom: 10px;
+    
   
-}
-input:focus {
-    color: chartreuse;
 }
