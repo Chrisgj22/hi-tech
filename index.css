@@ -31,13 +31,11 @@ body{
     flex-direction: column;
     color: chartreuse;
     flex-direction: column;
-    margin-top: 20px;
-    margin-bottom: 20px;
     padding: 15px;
     background-color: rgb(27, 26, 26);
     border: none;
     max-width: 400px;
-    margin: 10px auto;
+    margin: 10px auto 50px auto;
     border-radius: 14px;
     padding: 15px;
 }
