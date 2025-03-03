@@ -1,5 +1,3 @@
-// index.js
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
 import { getDatabase, ref, set, push, remove, onChildAdded, onChildChanged, onChildRemoved } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
@@ -13,24 +11,38 @@ const reference = ref(database, "jobs");
 
 const saveBtn = document.getElementById("saveBtn");
 const job = document.getElementById("job");
+const note = document.getElementById("note");
 const time = document.getElementById("time");
 
-// Track jobs already rendered and the total summary
+// Track jobs already rendered and total summary
 const renderedJobs = new Map(); // Map to track job nodes
-let totalHours = 0; // Track total hours across all jobs
 
 // Save a job entry to Firebase with a timestamp
 saveBtn.addEventListener("click", () => {
-    const jobNumber = job.value;
+    const jobNumber = job.value.trim();
+    const jobNote = note.value.trim();
     const timeSpent = parseFloat(time.value);
     const timestamp = Date.now();
+
+    if (!jobNumber || isNaN(timeSpent) || timeSpent <= 0) {
+        alert("Please enter a valid job number and time.");
+        return;
+    }
 
     // Push new entry under the specific job number
     const jobRef = ref(database, `jobs/${jobNumber}/entries`);
     push(jobRef, { timeSpent, timestamp });
 
-    // Save job number as part of the data
+    // Save job number and note
     set(ref(database, `jobs/${jobNumber}/jobNumber`), jobNumber);
+    if (jobNote) {
+        set(ref(database, `jobs/${jobNumber}/note`), jobNote);
+    }
+
+    // Clear input fields
+    job.value = "";
+    note.value = "";
+    time.value = "";
 });
 
 // Listen for new, changed, or removed job entries
@@ -89,6 +101,7 @@ function renderJob(snapshot) {
     // Update the card's inner HTML
     card.innerHTML = `
         <p class="jobNumberCard">Job#: ${data.jobNumber || jobId}</p>
+        <p class="jobNoteCard"><strong>Note:</strong> ${data.note || "No note provided"}</p>
         ${entriesHTML}
         <p class="totTimeP">Total Time: ${totalTime} hours</p>
     `;
@@ -111,11 +124,11 @@ function updateTotalHours() {
 
     // Calculate earnings based on total hours
     const tax = cumulativeTotalHours * 55 * 0.25;
-    const gross = cumulativeTotalHours * 55
-    const gst = cumulativeTotalHours * 55 *0.10
-    const net = cumulativeTotalHours * 55 - tax - gst
-    const subtotal = gross + gst
-    const taxToTransfer = gst + tax
+    const gross = cumulativeTotalHours * 55;
+    const gst = cumulativeTotalHours * 55 * 0.10;
+    const net = cumulativeTotalHours * 55 - tax - gst;
+    const subtotal = gross + gst;
+    const taxToTransfer = gst + tax;
 
     // Render or update the summary card
     let summaryCard = document.querySelector(".summary-card");
@@ -129,12 +142,11 @@ function updateTotalHours() {
     summaryCard.innerHTML = `
         <h3>Total Summary</h3>
         <p>Total Hours: ${cumulativeTotalHours} hours</p>
-        <p>Subtotal: ${subtotal} $</p>
-        <p>Gross: ${gross} $</p>
+        <p>Subtotal: $${subtotal.toFixed(2)}</p>
+        <p>Gross: $${gross.toFixed(2)}</p>
         <p>Tax: $${tax.toFixed(2)}</p>
-        <p>GST: ${gst} $</p>
-        <p>Net: ${net} $</p>
-        <p>Tax&GST: ${taxToTransfer} $</p>
-        
+        <p>GST: $${gst.toFixed(2)}</p>
+        <p>Net: $${net.toFixed(2)}</p>
+        <p>Tax & GST: $${taxToTransfer.toFixed(2)}</p>
     `;
 }
