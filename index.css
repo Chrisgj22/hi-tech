@@ -46,7 +46,10 @@ body{
     text-decoration: underline 2px;
     text-decoration-color: #9bf84b;
 }
-
+.i1, .i2, .i3{
+ display: flex;
+ justify-content: space-between;   
+}
 .weekCard{
     display: flex;
     justify-content: space-between;
